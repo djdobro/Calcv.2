@@ -26,7 +26,8 @@ public class Calc {
 
         for (String operator : OP) {
             op = input.contains(operator) ? operator : null;
-            if (op != null) break;
+            if (op != null)
+                break;
         }
 
         String[] oper = op != null ? input.split("\\" + op) : null;
@@ -41,22 +42,18 @@ public class Calc {
 
             char [] operand1 = oper[0].toCharArray();
             char [] operand2 = oper[1].toCharArray();
-            char [] resultCharArray = new char[operand1.length + operand2.length];
-            int index = 0;
-
-            for (char item: operand1) {
-                resultCharArray[index++] = item;
+        for (char i : operand1) {
+            String figure = Character.toString(i);
+            if (!RomanSymbol.contains(figure)) {
+                throw new RuntimeException();
             }
-            for (char item: operand2) {
-                resultCharArray[index++] = item;
+        }
+        for (char i : operand2) {
+            String figure = Character.toString(i);
+            if (!RomanSymbol.contains(figure)) {
+                throw new RuntimeException();
             }
-
-            for (char i : resultCharArray) {
-                String figure = Character.toString(i);
-                if (!arabic.contains(figure)){
-                    throw new RuntimeException();
-                }
-            }
+        }
             int a = romanToInt(operand1);
             int b = romanToInt(operand2);
             int resulintFromRoman = calcInArabic(a, b, op);
@@ -67,11 +64,11 @@ public class Calc {
             return (intToRoman(resulintFromRoman));
     }
      public static String intToRoman(int num){
-        arabic[] values = arabic.values();
+        RomanSymbol[] values = RomanSymbol.values();
         StringBuilder roman = new StringBuilder();
         for (int i = values.length - 1; i >= 0; i--){
-            while (num >= values[1].getValue()) {
-                num = num - values[1].getValue();
+            while (num >= values[i].getValue()) {
+                num -= values[i].getValue();
                 roman.append(values[i].name());
             }
         }
@@ -81,7 +78,7 @@ public class Calc {
         int result = 0;
         int prev = 0;
         for (int i = operand.length - 1; i >= 0; i--){
-            int cur = arabic.getBySymbol(Character.toString(operand[i]));
+            int cur = RomanSymbol.getBySymbol(Character.toString(operand[i]));
             if (cur < prev) {
                 result -= cur;
             }
@@ -91,11 +88,11 @@ public class Calc {
         }
         return result;
      }
-     public enum arabic {
+     public enum RomanSymbol {
         I(1), IV(4), V(5), IX(9), X(10), XL(40), L(50), XC(90), C(100);
 
         private final int value;
-        arabic(int value) {
+        RomanSymbol(int value) {
             this.value = value;
         }
 
@@ -104,7 +101,7 @@ public class Calc {
         }
 
         public static String getByValue(int value) {
-            for (arabic numeral : arabic.values()) {
+            for (RomanSymbol numeral : RomanSymbol.values()) {
                 if (numeral.value == value) {
                     return numeral.name();
                 }
@@ -112,8 +109,8 @@ public class Calc {
             throw new RuntimeException();
          }
 
-        public static int getBySymbol(String symbol){
-            for (arabic numeral : arabic.values()){
+        public static int getBySymbol(String symbol) {
+            for (RomanSymbol numeral : RomanSymbol.values()){
                 if (numeral.name().equals(symbol)){
                     return numeral.value;
                 }
@@ -122,7 +119,7 @@ public class Calc {
          }
 
         public static boolean contains(String test) {
-            for (arabic c : arabic.values()){
+            for (RomanSymbol c : RomanSymbol.values()){
                 if (c.name().equals(test)) {
                     return true;
                 }
